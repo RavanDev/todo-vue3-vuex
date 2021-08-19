@@ -50,7 +50,7 @@ import TaskItemCreate from "./components/TaskItemCreate.vue";
 import ErrorAlert from "./components/ErrorAlert.vue";
 import TodoList from "./components/TodoList.vue";
 import SpinnerLarge from "./components/SpinnerLarge.vue";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   components: { TodoList, SpinnerLarge, ErrorAlert, TaskItemCreate },
@@ -68,15 +68,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["isTasksLoading", "showErrorAlert"]),
-
-    loadingFlag() {
-      return this.isTasksLoading;
-    },
-
-    allertFlag() {
-      return this.showErrorAlert;
-    },
+    ...mapGetters(["loadingFlag", "allertFlag"]),
   },
 
   mounted() {

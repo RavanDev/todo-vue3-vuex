@@ -154,5 +154,13 @@ export default {
     tasksCount(state, getters) {
       return getters.getTasksComputed.length;
     },
+
+    loadingFlag(state) {
+      return state.isTasksLoading;
+    },
+
+    allertFlag(state) {
+      return state.showErrorAlert;
+    },
   },
 };
