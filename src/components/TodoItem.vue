@@ -11,7 +11,7 @@
         />
       </div>
 
-      <label :class="{ labelClass, checkedClass }">
+      <label :class="[labelClass, checkedClass]">
         {{ task.title }}
         <spinner-small v-if="task.isDisabled"></spinner-small>
       </label>

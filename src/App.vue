@@ -29,13 +29,13 @@
     <div class="row my-2">
       <div class="col-sm-10 p-0 m-0">
         <error-alert
-          v-if="showErrorAlert"
+          v-if="allertFlag"
           :error-message="errorMessage"
         ></error-alert>
       </div>
     </div>
 
-    <todo-list v-if="!isTasksLoading"></todo-list>
+    <todo-list v-if="!loadingFlag"></todo-list>
 
     <spinner-large v-else></spinner-large>
   </div>
@@ -69,6 +69,14 @@ export default {
 
   computed: {
     ...mapState(["isTasksLoading", "showErrorAlert"]),
+
+    loadingFlag() {
+      return this.isTasksLoading;
+    },
+
+    allertFlag() {
+      return this.showErrorAlert;
+    },
   },
 
   mounted() {

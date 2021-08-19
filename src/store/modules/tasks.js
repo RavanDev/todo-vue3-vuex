@@ -1,12 +1,14 @@
 import axios from "axios";
 
 export default {
-  state: {
-    tasksList: [],
-    tasksPage: 1,
-    tasksLimit: 10,
-    isTasksLoading: false,
-    showErrorAlert: false,
+  state() {
+    return {
+      tasksList: [],
+      tasksPage: 1,
+      tasksLimit: 10,
+      isTasksLoading: false,
+      showErrorAlert: false,
+    };
   },
 
   mutations: {
