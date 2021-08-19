@@ -17,6 +17,18 @@
       </label>
 
       <button
+        class="col-2 btn btn-success"
+        data-bs-toggle="modal"
+        data-bs-target="#editModal"
+        :disabled="task.isDisabled"
+        @click="changeTaskEdit(task)"
+      >
+        Edit
+      </button>
+
+      <task-title-edit-modal></task-title-edit-modal>
+
+      <button
         class="col-2 btn btn-danger"
         :disabled="task.isDisabled"
         @click="deleteTask(task.id)"
@@ -29,15 +41,16 @@
 
 <script>
 import SpinnerSmall from "./SpinnerSmall.vue";
-import { mapActions } from "vuex";
+import TaskTitleEditModal from "./TaskTitleEditModal.vue";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
-  components: { SpinnerSmall },
+  components: { SpinnerSmall, TaskTitleEditModal },
 
   data() {
     return {
       labelClass:
-        "col-9 bg-primary p-3 bg-opacity-75 fw-bold fs-5 text-uppercase text-start",
+        "col-7 bg-primary p-3 bg-opacity-75 fw-bold fs-5 text-uppercase text-start",
     };
   },
 
@@ -50,6 +63,7 @@ export default {
 
   methods: {
     ...mapActions(["deleteTask", "makeTaskCompleted"]),
+    ...mapMutations(["changeTaskEdit"]),
   },
 
   computed: {

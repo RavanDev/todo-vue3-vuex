@@ -53,7 +53,12 @@ import SpinnerLarge from "./components/SpinnerLarge.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  components: { TodoList, SpinnerLarge, ErrorAlert, TaskItemCreate },
+  components: {
+    TodoList,
+    SpinnerLarge,
+    ErrorAlert,
+    TaskItemCreate,
+  },
 
   data() {
     return {

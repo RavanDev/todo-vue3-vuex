@@ -6,12 +6,23 @@ export default {
       tasksList: [],
       tasksPage: 1,
       tasksLimit: 10,
+      taskForEdit: {},
       isTasksLoading: false,
       showErrorAlert: false,
+      taskTitle: "",
     };
   },
 
   mutations: {
+    updateTitle(state, e) {
+      state.taskTitle = e.target.value;
+    },
+
+    changeTaskEdit(state, task) {
+      state.taskForEdit = { ...task };
+      state.taskTitle = task.title;
+    },
+
     changeLoadingFlag(state, flag) {
       state.isTasksLoading = flag;
     },
@@ -161,6 +172,14 @@ export default {
 
     allertFlag(state) {
       return state.showErrorAlert;
+    },
+
+    getTaskForEdit(state) {
+      return state.taskForEdit;
+    },
+
+    taskTitle(state) {
+      return state.taskTitle;
     },
   },
 };
