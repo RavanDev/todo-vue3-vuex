@@ -57,6 +57,32 @@ export default {
   },
 
   actions: {
+    async editTask({ commit, state }, id) {
+      try {
+        commit("toggleAlert", false);
+
+        const response = await axios.patch(
+          `https://jsonplaceholder.typicode.com/todos/${id}`,
+          {
+            data: {
+              title: state.taskTitle,
+            },
+          }
+        );
+
+        commit("updateTaskItemValue", {
+          idItem: id,
+          keyItem: "title",
+          valueItem: state.taskTitle,
+        });
+      } catch (error) {
+        console.error(error);
+
+        commit("toggleAlert", true);
+      } finally {
+      }
+    },
+
     async addTask({ commit }, task) {
       try {
         commit("toggleAlert", false);

@@ -27,7 +27,15 @@
           >
             Close
           </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="editTask(getTaskForEdit.id)"
+            data-bs-dismiss="modal"
+            :disabled="editButtonDisabledFlag"
+          >
+            Save changes
+          </button>
         </div>
       </div>
     </div>
@@ -35,14 +43,22 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   computed: {
     ...mapGetters(["getTaskForEdit", "taskTitle"]),
+
+    editButtonDisabledFlag() {
+      return (
+        this.taskTitle.length === 0 ||
+        this.taskTitle === this.getTaskForEdit.title
+      );
+    },
   },
 
   methods: {
+    ...mapActions(["editTask"]),
     ...mapMutations(["updateTitle"]),
   },
 };
