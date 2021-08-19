@@ -7,9 +7,14 @@
 
 <script>
 import TodoItem from "./TodoItem.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: { TodoItem },
+
+  computed: {
+    ...mapGetters(["getTasksComputed"]),
+  },
 };
 </script>
 

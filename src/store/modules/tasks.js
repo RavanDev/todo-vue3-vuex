@@ -10,80 +10,111 @@ export default {
   },
 
   mutations: {
-    toggleAlert(flag) {
-      this.showErrorAlert = flag;
+    changeLoadingFlag(state, flag) {
+      state.isTasksLoading = flag;
     },
-    updateTaskItemValue(task, keyParameter, valueParameter) {
-      return this.tasksList.map((item) =>
-        item.id === task.id ? { ...item, [keyParameter]: valueParameter } : item
+
+    pushTask(state, task) {
+      state.tasksList.push({ ...task, isDisabled: false });
+    },
+
+    toggleAlert(state, flag) {
+      state.showErrorAlert = flag;
+    },
+
+    updateTaskItemValue(state, payload) {
+      state.tasksList = state.tasksList.map((item) =>
+        item.id === payload.idItem
+          ? { ...item, [payload.keyItem]: payload.valueItem }
+          : item
       );
+    },
+
+    getAllTasks(state, tasks) {
+      state.tasksList = tasks;
+    },
+
+    removeTask(state, id) {
+      state.tasksList = state.tasksList.filter((item) => item.id !== id);
+    },
+
+    addDisabledFlag(state) {
+      state.tasksList.forEach((item) => (item.isDisabled = false));
     },
   },
 
   actions: {
-    async addTask(task) {
+    async addTask({ commit }, task) {
       try {
-        this.toggleAlert(false);
+        commit("toggleAlert", false);
 
         const response = await axios.post(
           "https://jsonplaceholder.typicode.com/todos",
           task
         );
 
-        // this.tasksList.push({ ...response.data, isDisabled: false });
+        // This below line of code have to be uncommented on production with real rest api.
+        // commit("pushTask", response.data);
 
-        this.tasksList.push({ ...task, isDisabled: false });
+        // This below line of code have to be commented on production with real rest api.
+        commit("pushTask", task);
       } catch (error) {
         console.error(error);
-        this.toggleAlert(true);
+
+        commit("toggleAlert", true);
       }
     },
-    async getTasks() {
+
+    async getTasks({ commit, state }) {
       try {
-        this.isTasksLoading = true;
-        this.toggleAlert(false);
+        commit("changeLoadingFlag", true);
+        commit("toggleAlert", false);
 
         const response = await axios.get(
           "https://jsonplaceholder.typicode.com/todos?sort_by=id:desc",
           {
             params: {
-              _page: this.tasksPage,
-              _limit: this.tasksLimit,
+              _page: state.tasksPage,
+              _limit: state.tasksLimit,
             },
           }
         );
 
-        this.tasksList = response.data;
-
-        this.tasksList.forEach((item) => (item.isDisabled = false));
+        commit("getAllTasks", response.data);
+        commit("addDisabledFlag");
       } catch (error) {
         console.error(error);
-        this.toggleAlert(true);
+
+        commit("toggleAlert", true);
       } finally {
-        this.isTasksLoading = false;
+        commit("changeLoadingFlag", false);
       }
     },
 
-    async deleteTask(id) {
+    async deleteTask({ commit }, id) {
       try {
-        this.toggleAlert(false);
+        commit("toggleAlert", false);
 
         const response = await axios.delete(
           `https://jsonplaceholder.typicode.com/todos/${id}`
         );
 
-        this.tasksList = this.tasksList.filter((item) => item.id !== id);
+        commit("removeTask", id);
       } catch (error) {
         console.error(error);
-        this.toggleAlert(true);
+
+        commit("toggleAlert", true);
       }
     },
 
-    async makeTaskCompleted(task) {
+    async makeTaskCompleted({ commit }, task) {
       try {
-        this.toggleAlert(false);
-
-        this.tasksList = this.updateTaskItemValue(task, "isDisabled", true);
+        commit("toggleAlert", false);
+        commit("updateTaskItemValue", {
+          idItem: task.id,
+          keyItem: "isDisabled",
+          valueItem: true,
+        });
 
         const response = await axios.patch(
           `https://jsonplaceholder.typicode.com/todos/${task.id}`,
@@ -94,23 +125,32 @@ export default {
           }
         );
 
-        this.tasksList = this.updateTaskItemValue(
-          task,
-          "completed",
-          !task.completed
-        );
+        commit("updateTaskItemValue", {
+          idItem: task.id,
+          keyItem: "completed",
+          valueItem: !task.completed,
+        });
       } catch (error) {
         console.error(error);
-        this.toggleAlert(true);
+
+        commit("toggleAlert", true);
       } finally {
-        this.tasksList = this.updateTaskItemValue(task, "isDisabled", false);
+        commit("updateTaskItemValue", {
+          idItem: task.id,
+          keyItem: "isDisabled",
+          valueItem: false,
+        });
       }
     },
   },
 
   getters: {
-    getTasksComputed() {
-      return [...this.tasksList].reverse();
+    getTasksComputed(state) {
+      return [...state.tasksList].reverse();
+    },
+
+    tasksCount(state, getters) {
+      return getters.getTasksComputed.length;
     },
   },
 };

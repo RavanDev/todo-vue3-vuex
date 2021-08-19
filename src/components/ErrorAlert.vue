@@ -6,12 +6,14 @@
       type="button"
       class="btn-close"
       data-bs-dismiss="alert"
-      @click="closeAlert"
+      @click="toggleAlert(false)"
     ></button>
   </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   props: {
     errorMessage: {
@@ -20,16 +22,8 @@ export default {
     },
   },
 
-  data() {
-    return {
-      flag: false,
-    };
-  },
-
   methods: {
-    closeAlert() {
-      this.$emit("closeAlert", this.flag);
-    },
+    ...mapMutations(["toggleAlert"]),
   },
 };
 </script>

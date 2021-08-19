@@ -7,7 +7,7 @@
           type="checkbox"
           :checked="task.completed"
           :disabled="task.isDisabled"
-          @change="makeTaskDone"
+          @change="makeTaskCompleted(task)"
         />
       </div>
 
@@ -19,7 +19,7 @@
       <button
         class="col-2 btn btn-danger"
         :disabled="task.isDisabled"
-        @click="deleteTask"
+        @click="deleteTask(task.id)"
       >
         Delete
       </button>
@@ -29,6 +29,7 @@
 
 <script>
 import SpinnerSmall from "./SpinnerSmall.vue";
+import { mapActions } from "vuex";
 
 export default {
   components: { SpinnerSmall },
@@ -48,13 +49,7 @@ export default {
   },
 
   methods: {
-    deleteTask() {
-      this.$emit("deleteTask", this.task.id);
-    },
-
-    makeTaskDone() {
-      this.$emit("makeTaskDone", this.task);
-    },
+    ...mapActions(["deleteTask", "makeTaskCompleted"]),
   },
 
   computed: {

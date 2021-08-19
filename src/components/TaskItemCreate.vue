@@ -5,14 +5,14 @@
       class="form-control"
       placeholder="Write your new task here..."
       v-model="taskText"
-      @keyup.enter="addTask"
+      @keyup.enter="localAddTask"
     />
 
     <button
       class="btn btn-success"
       type="button"
       :disabled="taskText.length === 0"
-      @click="addTask"
+      @click="localAddTask"
     >
       Add Task
     </button>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
@@ -28,7 +30,9 @@ export default {
   },
 
   methods: {
-    addTask() {
+    ...mapActions(["addTask"]),
+
+    localAddTask() {
       if (this.taskText.length !== 0) {
         const newTask = {
           completed: false,
@@ -37,7 +41,7 @@ export default {
           userId: 1,
         };
 
-        this.$emit("addTask", newTask);
+        this.addTask(newTask);
         this.taskText = "";
       }
     },
